@@ -1,3 +1,6 @@
+# Ignore Visual Studio Code settings
+.vscode
+
 # Prerequisites
 *.d
 
