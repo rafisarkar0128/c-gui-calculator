@@ -74,8 +74,10 @@ gcc -o calculator main.c `pkg-config --cflags --libs gtk+-3.0` -lm
 ## 🤝 Team Members
 
 - Md. Rafi Sarkar - [GitHub Profile](https://github.com/rafisarkar0128)
-- Ainul Huque - [GitHub Profile](https://github.com/HANEKAGE-001)
+- Ainul Huque - [GitHub Profile](https://github.com/ainul10222)
+- [Other Team Member 1]
 - [Other Team Member 2]
+- [Other Team Member 3]
 
 ## 📚 References
 

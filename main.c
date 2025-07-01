@@ -10,7 +10,42 @@ float difference(float, float);
 float product(float, float);
 float quotient(float, float);
 float root(float);
-void handle_choice(int, float, float);
+void handle_choice(int);
+
+// main function
+int main(void) {
+    // printing the welcome message.
+    printf("Welcome to the Looping Calculator!\n");
+    printf("--------------------------------------------------\n");
+    printf("\n");
+
+    int choice;
+
+    while (1) {
+
+        // Getting the choice from the user.
+        choice = get_choice();
+        if (choice == 6) break;
+
+        // Displaying the user's choice.
+        printf("\n");
+        show_choice(choice);
+
+        // handling the choice of operations.
+        handle_choice(choice);
+
+        // Printing a separator for better readability.
+        printf("--------------------------------------------------\n");
+        printf("\n");
+    }
+
+    // Exiting the calculator.
+    printf("\n");
+    printf("You chose to exit the calculator.\n");
+    printf("Exiting the calculator. Goodbye!\n");
+    printf("--------------------------------------------------\n");
+    return 0;
+}
 
 // function to print the choices of operations
 void print_choices(void) {
@@ -19,7 +54,7 @@ void print_choices(void) {
     printf("2. Subtraction\n");
     printf("3. Multiplication\n");
     printf("4. Division\n");
-    printf("5. Root\n");
+    printf("5. Square Root\n");
     printf("6. Exit\n");
     printf("Enter your choice (1-6): ");
 }
@@ -71,9 +106,10 @@ void show_choice(int choice) {
         }
 
         case 5: {
-            printf("You chose Square Root\n");
+            printf("You chose Square Root.\n");
             break;
         }
+
         case 6: {
             printf("You chose to Exit the calculator.\n");
             break;
@@ -99,18 +135,32 @@ float quotient(float a, float b) {
 
     return a / b;
 }
-//function to find the square root of a number
-float root(float a)
-{
-    if(a<0)
-    {
+
+// function to find the square root of a number
+float root(float a) {
+    if (a < 0) {
         printf("Error: Cannot find the square root of a negative number.\n");
         return 0;
     }
+
     return sqrt(a);
 }
 
-void handle_choice(int choice, float num1, float num2) {
+void handle_choice(int choice) {
+    // Taking input from the user.
+    float num1, num2;
+
+    // Prompting the user to enter two numbers.
+    if (choice <= 4) {
+        printf("Enter first number: ");
+        scanf("%f", &num1);
+        printf("Enter second number: ");
+        scanf("%f", &num2);
+    } else {
+        printf("Enter the desired number: ");
+        scanf("%f", &num1);
+    }
+
     switch (choice) {
         case 1: {
             printf("The sum is: %.2f\n", add(num1, num2));
@@ -131,59 +181,10 @@ void handle_choice(int choice, float num1, float num2) {
             printf("The quotient is: %.2f\n", quotient(num1, num2));
             break;
         }
+
         case 5: {
             printf("The square root of %.2f is: %.2f\n", num1, root(num1));
             break;
         }
     }
-}
-
-int main(void) {
-    // printing the welcome message.
-    printf("Welcome to the Looping Calculator!\n");
-    printf("--------------------------------------------------\n");
-    printf("\n");
-
-    int choice;
-
-    // Taking input from the user.
-    float num1, num2;
-
-    while (1) {
-        // Getting the choice from the user.
-        choice = get_choice();
-        
-        // Displaying the user's choice.
-        printf("\n");
-        show_choice(choice);
-        if (choice == 6) break;
-        if(choice==5)
-        {
-            //only one number needed for square root operation
-            printf("Enter a Number: ");
-            scanf("%f",&num1);
-            handle_choice(choice, num1, 0);
-
-        }
-        else
-        {// Prompting the user to enter two numbers.
-        printf("Enter first number: ");
-        scanf("%f",&num1);
-        printf("Enter second number: ");
-        scanf("%f", &num2);
-
-        // handling the choice of operations.
-        handle_choice(choice, num1, num2);
-        }
-        // Printing a separator for better readability.
-        printf("--------------------------------------------------\n");
-        printf("\n");
-    }
-
-    // Exiting the calculator.
-    printf("\n");
-    printf("You chose to exit the calculator.\n");
-    printf("Exiting the calculator. Goodbye!\n");
-    printf("--------------------------------------------------\n");
-    return 0;
 }
