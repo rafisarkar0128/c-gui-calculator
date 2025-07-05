@@ -121,7 +121,7 @@ void show_choice(int choice) {
 float add(float a, float b) { return a + b; }
 
 // function to find the difference between two numbers
-float difference(float a, float b) { return fabs(a - b); }
+float difference(float a, float b) { return a - b; }
 
 // function to find the product of two numbers
 float product(float a, float b) { return a * b; }
