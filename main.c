@@ -25,7 +25,7 @@ int main(void) {
 
         // Getting the choice from the user.
         choice = get_choice();
-        if (choice == 6) break;
+        if (choice == 8) break;
 
         // Displaying the user's choice.
         printf("\n");
@@ -55,8 +55,10 @@ void print_choices(void) {
     printf("3. Multiplication\n");
     printf("4. Division\n");
     printf("5. Square Root\n");
-    printf("6. Exit\n");
-    printf("Enter your choice (1-6): ");
+    printf("6. Log (Base 10)\n");
+    printf("7. Natural Log (ln)\n");
+    printf("8. Exit\n");
+    printf("Enter your choice (1-8): ");
 }
 
 // function to get the user's choice of operation
@@ -68,8 +70,8 @@ int get_choice(void) {
         print_choices();
         scanf("%d", &choice);
 
-        // If the choice is valid (between 1 and 6), break the loop.
-        if (choice >= 1 && choice <= 6) break;
+        // If the choice is valid (between 1 and 8), break the loop.
+        if (choice >= 1 && choice <= 8) break;
 
         // If the choice is invalid, prompt the user again.
         printf("Invalid choice. Please select a valid operation.\n");
@@ -77,7 +79,7 @@ int get_choice(void) {
         // Printing a separator for better readability.
         printf("--------------------------------------------------\n");
         printf("\n");
-    } while (choice < 1 || choice > 6);
+    } while (choice < 1 || choice > 8);
 
     return choice;
 }
@@ -109,14 +111,18 @@ void show_choice(int choice) {
             printf("You chose Square Root.\n");
             break;
         }
-
         case 6: {
+            printf("You chose Log (Base 10).\n"); 
+            break;
+        }
+        case 7: { printf("You chose Natural Log (ln).\n");
+             break;
+       } case 8: {
             printf("You chose to Exit the calculator.\n");
             break;
         }
     }
 }
-
 // function to add two float numbers
 float add(float a, float b) { return a + b; }
 
@@ -146,6 +152,23 @@ float root(float a) {
     return sqrt(a);
 }
 
+// function to calculate logarithm base 10 and natural logarithm
+float log_base10(float a) {
+    if (a <= 0) {
+        printf("Error: Logarithm undefined for zero or negative numbers.\n");
+        return 0;
+    }
+    return log10(a);
+}
+
+float natural_log(float a) {
+    if (a <= 0) {
+        printf("Error: Natural log undefined for zero or negative numbers.\n");
+        return 0;
+    }
+    return log(a);
+}
+
 void handle_choice(int choice) {
     // Taking input from the user.
     float num1, num2;
@@ -156,7 +179,7 @@ void handle_choice(int choice) {
         scanf("%f", &num1);
         printf("Enter second number: ");
         scanf("%f", &num2);
-    } else {
+    }  else if (choice >= 5 && choice <= 7) {
         printf("Enter the desired number: ");
         scanf("%f", &num1);
     }
@@ -186,5 +209,15 @@ void handle_choice(int choice) {
             printf("The square root of %.2f is: %.2f\n", num1, root(num1));
             break;
         }
+        case 6: {
+            printf("The logarithm base 10 of %.2f is: %.2f\n", num1, log_base10(num1));
+            break;
+        }
+        case 7: {
+            printf("The natural logarithm of %.2f is: %.2f\n", num1, natural_log(num1));
+            break;
+        }
     }
-}
+
+    }
+
