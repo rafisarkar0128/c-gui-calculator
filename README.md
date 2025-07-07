@@ -14,7 +14,7 @@ A beginner-friendly project developed as part of the **CSE115 course** in the **
 ## 🚀 Features
 
 - [x] Basic arithmetic: Add, Subtract, Multiply, Divide
-- [ ] Scientific functions: Power, Square Root, Trigonometric operations (sin, cos, etc.)
+- [ ] Scientific functions: Power, Square Root, log, ln, Trigonometric operations (sin, cos, etc.)
 - [ ] Interactive buttons and display
 - [ ] Keyboard support for input (optional)
 - [ ] Error handling (e.g., divide-by-zero)
