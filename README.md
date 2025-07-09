@@ -98,7 +98,7 @@ This project is licensed under the [MIT License](https://github.com/rafisarkar01
 
 For any questions or contributions, feel free to reach out:
 
--   **Discord:** [rafisarkar0128](https://discord.com/users/720186844540567583)
+-   **Gravatar:** [https://gravatar.com/rafisarkar0128](https://gravatar.com/rafisarkar0128)
 -   **Email:** [rafisarkar0128@gmail.com](mailto:rafisarkar0128@gmail.com)
 
 [issues-shield]: https://img.shields.io/github/issues/rafisarkar0128/c-gui-calculator?style=for-the-badge
