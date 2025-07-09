@@ -1,0 +1,25 @@
+# Requirements for building and running the C GUI Calculator project
+
+# Package descriptions:
+# gcc           - The GNU Compiler Collection, required to compile C source code.
+# pkg-config    - Helper tool to manage compiler and linker flags for libraries like GTK.
+# libgtk-3-dev  - Development files for GTK+ 3, required for building GUI applications in C.
+
+# Installation instructions:
+#
+# Linux (Debian/Ubuntu):
+#   sudo apt update
+#   sudo apt install gcc pkg-config libgtk-3-dev
+#
+# Linux (Fedora/CentOS/RHEL):
+#   sudo dnf install gcc pkgconf-pkg-config gtk3-devel
+#
+# Windows (MSYS2):
+#   pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-pkg-config mingw-w64-x86_64-gtk3
+#
+# macOS (Homebrew):
+#   brew install gcc pkg-config gtk+3
+
+gcc            # C compiler
+pkg-config     # Build configuration helper
+libgtk-3-dev   # GTK+ 3 development files (for GUI)
