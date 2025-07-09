@@ -10,6 +10,8 @@ float difference(float, float);
 float product(float, float);
 float quotient(float, float);
 float root(float);
+float log_base10(float a);
+float natural_log(float a);
 void handle_choice(int);
 
 // main function
@@ -111,18 +113,24 @@ void show_choice(int choice) {
             printf("You chose Square Root.\n");
             break;
         }
+
         case 6: {
-            printf("You chose Log (Base 10).\n"); 
+            printf("You chose Log (Base 10).\n");
             break;
         }
-        case 7: { printf("You chose Natural Log (ln).\n");
-             break;
-       } case 8: {
+
+        case 7: {
+            printf("You chose Natural Log (ln).\n");
+            break;
+        }
+
+        case 8: {
             printf("You chose to Exit the calculator.\n");
             break;
         }
     }
 }
+
 // function to add two float numbers
 float add(float a, float b) { return a + b; }
 
@@ -179,7 +187,7 @@ void handle_choice(int choice) {
         scanf("%f", &num1);
         printf("Enter second number: ");
         scanf("%f", &num2);
-    }  else if (choice >= 5 && choice <= 7) {
+    } else if (choice >= 5 && choice <= 7) {
         printf("Enter the desired number: ");
         scanf("%f", &num1);
     }
@@ -209,15 +217,17 @@ void handle_choice(int choice) {
             printf("The square root of %.2f is: %.2f\n", num1, root(num1));
             break;
         }
+
         case 6: {
-            printf("The logarithm base 10 of %.2f is: %.2f\n", num1, log_base10(num1));
+            printf("The logarithm base 10 of %.2f is: %.2f\n", num1,
+                   log_base10(num1));
             break;
         }
+
         case 7: {
-            printf("The natural logarithm of %.2f is: %.2f\n", num1, natural_log(num1));
+            printf("The natural logarithm of %.2f is: %.2f\n", num1,
+                   natural_log(num1));
             break;
         }
     }
-
-    }
-
+}

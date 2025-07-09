@@ -11,40 +11,35 @@ A beginner-friendly project developed as part of the **CSE115 course** in the **
 [![MIT License][license-shield]][license-url]
 [![Last Commit][commit-shield]][commit-url]
 
-## 🚀 Features
-
-- [x] Basic arithmetic: Add, Subtract, Multiply, Divide
-- [ ] Scientific functions: Power, Square Root, log, ln, Trigonometric operations (sin, cos, etc.)
-- [ ] Interactive buttons and display
-- [ ] Keyboard support for input (optional)
-- [ ] Error handling (e.g., divide-by-zero)
-
-## 📚 Learning Outcomes
-
-- Hands-on experience with **C fundamentals**
-- Introduction to **GUI development** using C and GTK
-- Modular programming and event-driven design
-- Collaborative software development and Git usage
-
-## 🛠️ Tech Stack
-
-- **Language:** C
-- **GUI Library:** GTK
-- **Compiler:** GCC
-- **Version Control:** Git & GitHub
-
 ## 🗂️ Project Structure
 
 ```
 c-gui-calculator/
-├── main.c           # Core logic
-├── gui.c/h          # GUI-related code (if separated)
-├── Makefile         # For build automation
-├── .gitignore       # For ignoring unnecessary files
-├── LICENSE          # Project license (if applicable)
-├── README.md        # Project documentation
-└── assets/          # Icons, themes (optional)
+├── main.c              # Main code file to run the project
+├── README.md           # Project documentation
+├── requirements.txt    # List of required tools/libraries
+├── .github/            # GitHub workflows and issue templates
+├── .gitignore          # Ignore unnecessary files
+├── LICENSE             # Project license
+├── SECURITY.md         # Security policy
+├── _config.yml         # Configuration file (for GitHub Pages)
+├── data/               # Datasets (images, etc.)
+├── support/            # Other code files
+├── others/             # Final & update presentations, reports, and demo video
+│   ├── final_presentation.pptx
+│   ├── final_report.pdf
+│   ├── update_presentation.pptx
+│   ├── update_report.pdf
+│   └── demo_video.mp4
 ```
+
+## 🚀 Features
+
+-   [x] Basic arithmetic: Add, Subtract, Multiply, Divide
+-   [ ] Scientific functions: Power, Square Root, log, ln, Trigonometric operations (sin, cos, etc.)
+-   [ ] Interactive buttons and display
+-   [ ] Keyboard support for input (optional)
+-   [ ] Error handling (e.g., divide-by-zero)
 
 ## 💡 Getting Started
 
@@ -73,16 +68,23 @@ gcc -o calculator main.c `pkg-config --cflags --libs gtk+-3.0` -lm
 
 ## 🤝 Team Members
 
-- [Md. Rafi Sarkar](https://github.com/rafisarkar0128)
-- [Ainul Huque](https://github.com/ainul10222)
-- [Md. Ahasanul Kabir Tahsin](https://github.com/Tahsin99x)
-- [Md. Hasibul Halim](https://github.com/HHHasibCSE)
-- [Md. Rahat Sarkar](https://github.com/rahat7100)
+-   [Md. Rafi Sarkar](https://github.com/rafisarkar0128)
+-   [Ainul Huque](https://github.com/ainul10222)
+-   [Md. Ahasanul Kabir Tahsin](https://github.com/Tahsin99x)
+-   [Md. Hasibul Halim](https://github.com/HHHasibCSE)
+-   [Md. Rahat Sarkar](https://github.com/rahat7100)
+
+## 📚 Learning Outcomes
+
+-   Hands-on experience with **C fundamentals**
+-   Introduction to **GUI development** using C and GTK
+-   Modular programming and event-driven design
+-   Collaborative software development and Git usage
 
 ## 📚 References
 
-- [GTK Documentation](https://www.gtk.org/docs/)
-- [C Programming Language](<https://en.wikipedia.org/wiki/C_(programming_language)/>)
+-   [GTK Documentation](https://www.gtk.org/docs/)
+-   [C Programming Language](<https://en.wikipedia.org/wiki/C_(programming_language)/>)
 
 ## 🧠 Acknowledgments
 
@@ -96,8 +98,8 @@ This project is licensed under the [MIT License](https://github.com/rafisarkar01
 
 For any questions or contributions, feel free to reach out:
 
-- **Discord:** [rafisarkar0128](https://discord.com/users/720186844540567583)
-- **GitHub:** [rafisarkar0128](https://github.com/rafisarkar0128)
+-   **Discord:** [rafisarkar0128](https://discord.com/users/720186844540567583)
+-   **Email:** [rafisarkar0128@gmail.com](mailto:rafisarkar0128@gmail.com)
 
 [issues-shield]: https://img.shields.io/github/issues/rafisarkar0128/c-gui-calculator?style=for-the-badge
 [issues-url]: https://github.com/rafisarkar0128/c-gui-calculator/issues
