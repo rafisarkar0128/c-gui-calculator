@@ -2,7 +2,7 @@
 
 A beginner-friendly project developed as part of the **CSE115 course** in the **Department of Electrical & Computer Engineering** in **North South University**. This GUI-based calculator performs both **basic arithmetic** and **scientific operations** using the **C programming language** with a graphical interface powered by `GTK`.
 
-## Status
+## 🧪 Project Reactor Status
 
 [![Issues][issues-shield]][issues-url]
 [![Forks][forks-shield]][forks-url]
@@ -43,28 +43,7 @@ c-gui-calculator/
 
 ## 💡 Getting Started
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/rafisarkar0128/c-gui-calculator.git
-cd c-gui-calculator
-```
-
-### 2. Install GTK (Linux)
-
-```bash
-sudo apt update
-sudo apt install libgtk-3-dev
-```
-
-### 3. Compile the project
-
-```bash
-gcc -o calculator main.c `pkg-config --cflags --libs gtk+-3.0` -lm
-./calculator
-```
-
-> 💡 Windows users can use MSYS2 or Code::Blocks with GTK setup.
+For complete setup instructions and compilation steps across all supported platforms, check out the [Getting Started Guide](./Getting-Started.md).
 
 ## 🤝 Team Members
 
@@ -92,14 +71,16 @@ Thanks to our instructor and the CSE115 course staff for their guidance and reso
 
 ## 📄 License
 
-This project is licensed under the [MIT License](https://github.com/rafisarkar0128/c-gui-calculator/blob/master/LICENSE).
+This project is licensed under the [MIT License](./LICENSE).
 
 ## 📞 Contact
 
 For any questions or contributions, feel free to reach out:
 
--   **Gravatar:** [https://gravatar.com/rafisarkar0128](https://gravatar.com/rafisarkar0128)
--   **Email:** [rafisarkar0128@gmail.com](mailto:rafisarkar0128@gmail.com)
+[![Gmail](https://img.shields.io/badge/Send%20Mail-EA4335?style=for-the-badge&color=171A21&labelColor=EA4335&logo=gmail&logoColor=white)](mailto:rafisarkar0128@gmail.com)
+[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://facebook.com/rafisarkar0128)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/rafisarkar0128/)
+[![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/users/720186844540567583/)
 
 [issues-shield]: https://img.shields.io/github/issues/rafisarkar0128/c-gui-calculator?style=for-the-badge
 [issues-url]: https://github.com/rafisarkar0128/c-gui-calculator/issues
