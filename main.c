@@ -15,16 +15,23 @@ double root(double);
 double log_base10(double);
 double natural_log(double);
 void handle_choice(int);
+double get_number(char *);
+bool ask_continue(void);
 
 // main function
 int main(void) {
     int choice;
     char ch;
-    print_welcome();
 
     // Getting the choice from the user.
     while (true) {
+        // Printing the welcome message.
+        print_welcome();
+
+        // Getting the user's choice of operation.
         choice = get_choice();
+
+        // If the user chooses to exit, break the loop.
         if (choice == 8) break;
 
         // Displaying the user's choice.
@@ -34,19 +41,7 @@ int main(void) {
         handle_choice(choice);
 
         // asking the user whether to continue or not
-        printf("\nDo you want to continue [y/n]: ");
-        scanf(" %c", &ch);
-        while (ch != 'y' && ch != 'n' && ch != 'Y' && ch != 'N') {
-            printf("Invalid choice. Do you want to continue [Yes/No]: ");
-            scanf(" %c", &ch);
-        }
-
-        if (ch == 'y' || ch == 'y') {
-            print_welcome();
-        } else {
-            printf("\x1b[1A\x1b[0K");
-            break;
-        }
+        if (!ask_continue()) break;
     }
 
     // Exiting the calculator.
@@ -76,24 +71,30 @@ void print_choices(void) {
     printf("6. Log (Base 10)\n");
     printf("7. Natural Log (ln)\n");
     printf("8. Exit\n");
-    printf("Enter your choice (1-8): ");
 }
 
 // function to get the user's choice of operation
 int get_choice(void) {
     int choice = 0;
+    char buffer[100];
+    bool success = false;
 
     // Printing the choices of operations.
     print_choices();
-    scanf("%d", &choice);
 
-    // If the choice is invalid (not between 1 and 8), keep the loop.
-    while (choice < 1 || 8 < choice) {
-        // clearing the whole line
-        printf("\x1b[1A\x1b[1K");
-        // If the choice is invalid, prompt the user again.
-        printf("Invalid choice. Please select a valid operation: ");
-        scanf("%d", &choice);
+    // looping until a valid choice is entered
+    while (!success) {
+        printf("Enter your choice (1-8): ");
+        fgets(buffer, sizeof(buffer), stdin);
+
+        // Try to parse an integer
+        if (sscanf(buffer, "%d", &choice) == 1) {
+            // if the choice is valid, set success to true
+            if (choice >= 1 && choice <= 8) success = true;
+        } else {
+            // clearing the whole line
+            printf("\x1b[1A\x1b[0J");
+        }
     }
 
     // clearing the whole line again
@@ -189,40 +190,49 @@ double natural_log(double a) {
 void handle_choice(int choice) {
     // Taking input from the user.
     double num1, num2, r;
+    char prompt[100];
+    char *ptr = prompt;
 
     // Prompting the user to enter two numbers.
     if (choice <= 4) {
-        printf("Enter first number: ");
-        scanf("%lf", &num1);
-        printf("Enter second number: ");
-        scanf("%lf", &num2);
+        ptr = "Enter first number: ";
+        num1 = get_number(ptr);
+        // Clear the line after first input
+        printf("\x1b[1A\x1b[0J");
+
+        ptr = "Enter second number: ";
+        num2 = get_number(ptr);
+        // Clear the line after second input
+        printf("\x1b[1A\x1b[0J");
     } else if (choice >= 5 && choice <= 7) {
-        printf("Enter the desired number: ");
-        scanf("%lf", &num1);
+        ptr = "Enter the desired number: ";
+        num1 = get_number(ptr);
+        // Clear the line after the desired input
+        printf("\x1b[1A\x1b[0J");
     }
 
     switch (choice) {
         case 1: {
             r = add(num1, num2);
-            printf("The sum is: %g\n", r);
+            printf("The sum of %g and %g is: %g\n", num1, num2, r);
             break;
         }
 
         case 2: {
             r = substract(num1, num2);
-            printf("The difference is: %g\n", r);
+            printf("The result of %g - %g is: %g\n", num1, num2, r);
             break;
         }
 
         case 3: {
             r = multiply(num1, num2);
-            printf("The product is: %g\n", r);
+            printf("The product of %g and %g is: %g\n", num1, num2, r);
             break;
         }
 
         case 4: {
             r = devide(num1, num2);
-            printf("The quotient is: %g\n", r);
+            printf("The quotient of %g and %g is: %g\n", num1, num2, r);
             break;
         }
 
@@ -244,4 +254,60 @@ void handle_choice(int choice) {
             break;
         }
     }
+}
+
+// function to get a number from the user
+double get_number(char *prompt) {
+    double number;
+    char buffer[100];
+    bool success = false;
+
+    while (!success) {
+        // Clear current line before printing prompt
+        printf("\r\033[2K");  // move to start and clear line
+        printf("%s", prompt);
+        fflush(stdout);
+        fgets(buffer, sizeof(buffer), stdin);
+
+        // Try to parse a double
+        if (sscanf(buffer, "%lf", &number) == 1) {
+            success = true;
+        } else {
+            // clearing the whole line
+            printf("\x1b[1A\x1b[1K");
+        }
+    }
+
+    return number;
+}
+
+// function to ask the user whether to continue or not
+bool ask_continue(void) {
+    char buffer[100];
+    char ch;
+    bool valid = false;
+
+    // Prompting the user to continue or not.
+    while (!valid) {
+        printf("Do you want to continue [y/n]: ");
+        fgets(buffer, sizeof(buffer), stdin);
+
+        // sscanf parses the first non-whitespace character
+        if (sscanf(buffer, " %c", &ch) == 1) {
+            if (ch == 'y' || ch == 'n' || ch == 'Y' || ch == 'N') {
+                valid = true;
+            } else {
+                // Clear invalid line (optional)
+                printf("\x1b[1A\x1b[0J");  // Move up and clear line
+            }
+        }
+    }
+
+    // Optional: clear this prompt line if answer is 'n'
+    if (ch == 'n' || ch == 'N') {
+        printf("\x1b[1A\x1b[0J");
+        return false;
+    }
+
+    return true;
 }
