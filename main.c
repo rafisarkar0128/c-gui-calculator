@@ -1,60 +1,70 @@
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 
-// ALTERNATIVE: Define M_PI manually if not available
+//  Define PI constant since M_PI might not be available
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 
 // function prototypes
+void print_welcome(void);
 void print_choices(void);
 int get_choice(void);
 void show_choice(int);
-float add(float, float);
-float difference(float, float);
-float product(float, float);
-float quotient(float, float);
-float root(float);
-float log_base10(float a);
-float natural_log(float a);
-float sine(float a);
-float cosine(float a);
-float tangent(float a);
+double add(double, double);
+double substract(double, double);
+double multiply(double, double);
+double devide(double, double);
+double root(double);
+double log_base10(double);
+double natural_log(double);
+double sine(double);
+double cosine(double);
+double tangent(double);
+double degrees_to_radians(double);
 void handle_choice(int);
+double get_number(char *);
+bool ask_continue(void);
 
 // main function
 int main(void) {
-    // printing the welcome message.
-    printf("Welcome to the Looping Calculator!\n");
-    printf("--------------------------------------------------\n");
-    printf("\n");
-
     int choice;
+    char ch;
 
-    while (1) {
+    // Getting the choice from the user.
+    while (true) {
+        // Printing the welcome message.
+        print_welcome();
 
-        // Getting the choice from the user.
+        // Getting the user's choice of operation.
         choice = get_choice();
         if (choice == 11) break;
 
         // Displaying the user's choice.
-        printf("\n");
         show_choice(choice);
 
         // handling the choice of operations.
         handle_choice(choice);
 
-        // Printing a separator for better readability.
-        printf("--------------------------------------------------\n");
-        printf("\n");
+        // asking the user whether to continue or not
+        if (!ask_continue()) break;
     }
 
     // Exiting the calculator.
-    printf("\n");
-    printf("You chose to exit the calculator.\n");
     printf("Exiting the calculator. Goodbye!\n");
     printf("--------------------------------------------------\n");
     return 0;
+}
+
+// function to print the welcome message
+void print_welcome(void) {
+    // clearing the whole screen before initializing
+    printf("\x1b[2J]\x1b[H");
+
+    // printing the welcome message.
+    printf("Welcome to the Looping Calculator!\n");
+    printf("--------------------------------------------------\n\n");
 }
 
 // function to print the choices of operations
@@ -67,107 +77,107 @@ void print_choices(void) {
     printf("5. Square Root\n");
     printf("6. Log (Base 10)\n");
     printf("7. Natural Log (ln)\n");
-    printf("8. sine(sin)\n");
-    printf("9. cosine(cos)\n");
-    printf("10. tangent(tan)\n");
+    printf("8. Sine (sin)\n");
+    printf("9. Cosine (cos)\n");
+    printf("10. Tangent (tan)\n");
     printf("11. Exit\n");
-    printf("Enter your choice (1-11): ");
 }
 
 // function to get the user's choice of operation
 int get_choice(void) {
-    int choice;
+    int choice = 0;
+    char buffer[100];
+    bool success = false;
 
-    do {
-        // Printing the choices of operations.
-        print_choices();
-        scanf("%d", &choice);
+    // Printing the choices of operations.
+    print_choices();
 
-        // If the choice is valid (between 1 and 8), break the loop.
-        if (choice >= 1 && choice <= 11) break;
+    // looping until a valid choice is entered
+    while (!success) {
+        printf("Enter your choice (1-11): ");
+        fgets(buffer, sizeof(buffer), stdin);
 
-        // If the choice is invalid, prompt the user again.
-        printf("Invalid choice. Please select a valid operation.\n");
+        // Try to parse an integer
+        if (sscanf(buffer, "%d", &choice) == 1) {
 
-        // Printing a separator for better readability.
-        printf("--------------------------------------------------\n");
-        printf("\n");
-    } while (choice < 1 || choice > 8);
+            if (choice >= 1 && choice <= 11) {
+                success = true;
+            } else {
+                // clearing the whole line
+                printf("\x1b[1A\x1b[0J");
+            }
+        } else {
+            // clearing the whole line
+            printf("\x1b[1A\x1b[0J");
+        }
+    }
 
+    printf("\x1b[13A\x1b[0J");
     return choice;
 }
 
 // function to display the user's choice of operation
 void show_choice(int choice) {
+    printf("You chose ");
     switch (choice) {
         case 1: {
-            printf("You chose Addition.\n");
+            printf("Addition");
             break;
         }
-
         case 2: {
-            printf("You chose Subtraction.\n");
+            printf("Subtraction");
             break;
         }
-
         case 3: {
-            printf("You chose Multiplication.\n");
+            printf("Multiplication");
             break;
         }
-
         case 4: {
-            printf("You chose Division.\n");
+            printf("Division");
             break;
         }
-
         case 5: {
-            printf("You chose Square Root.\n");
+            printf("Square Root");
             break;
         }
-
         case 6: {
-            printf("You chose Log (Base 10).\n");
+            printf("Log (Base 10)");
             break;
         }
-
         case 7: {
-            printf("You chose Natural Log (ln).\n");
+            printf("Natural Log (ln)");
             break;
         }
-
         case 8: {
-            printf("You chose Sine (sin).\n");
+            printf("Sine (sin)");
             break;
         }
-
         case 9: {
-            printf("You chose Cosine (cos).\n");
+            printf("Cosine (cos)");
             break;
         }
-
         case 10: {
-            printf("You chose Tangent (tan).\n");
+            printf("Tangent (tan)");
             break;
         }
-
-        case 11: {
-            printf("You chose to Exit the calculator.\n");
-            break;
+        default: {
+            printf("to Exit the calculator");
         }
     }
+    printf(".\n");
 }
 
-// function to add two float numbers
-float add(float a, float b) { return a + b; }
+// function to add two double numbers
+double add(double a, double b) { return a + b; }
 
 // function to find the difference between two numbers
-float difference(float a, float b) { return a - b; }
+double substract(double a, double b) { return a - b; }
 
 // function to find the product of two numbers
-float product(float a, float b) { return a * b; }
+double multiply(double a, double b) { return a * b; }
 
 // function to find the quotient of two numbers
-float quotient(float a, float b) {
+double devide(double a, double b) {
     if (b == 0) {
         printf("Error: Cannot divide by zero.\n");
         return 0;
@@ -177,7 +187,7 @@ float quotient(float a, float b) {
 }
 
 // function to find the square root of a number
-float root(float a) {
+double root(double a) {
     if (a < 0) {
         printf("Error: Cannot find the square root of a negative number.\n");
         return 0;
@@ -187,7 +197,7 @@ float root(float a) {
 }
 
 // function to calculate logarithm base 10 and natural logarithm
-float log_base10(float a) {
+double log_base10(double a) {
     if (a <= 0) {
         printf("Error: Logarithm undefined for zero or negative numbers.\n");
         return 0;
@@ -195,7 +205,7 @@ float log_base10(float a) {
     return log10(a);
 }
 
-float natural_log(float a) {
+double natural_log(double a) {
     if (a <= 0) {
         printf("Error: Natural log undefined for zero or negative numbers.\n");
         return 0;
@@ -203,98 +213,159 @@ float natural_log(float a) {
     return log(a);
 }
 
-// function to calculate sine of an angle (input in degrees)
-float sine(float a) {
-    // Convert degrees to radians for calculation
-    float radians = a * M_PI / 180.0;
-    return sin(radians);
-}
+double sine(double a) { return sin(a); }
 
-// function to calculate cosine of an angle (input in degrees)
-float cosine(float a) {
-    // Convert degrees to radians for calculation
-    float radians = a * M_PI / 180.0;
-    return cos(radians);
-}
+double cosine(double a) { return cos(a); }
 
-// function to calculate tangent of an angle (input in degrees)
-float tangent(float a) {
-    // Convert degrees to radians for calculation
-    float radians = a * M_PI / 180.0;
+double tangent(double a) { return tan(a); }
 
-    // Check for values where tangent is undefined (90°, 270°, etc.)
-    float normalized = fmod(a, 180.0);
-    if (fabs(normalized - 90.0) < 1e-6 || fabs(normalized + 90.0) < 1e-6) {
-        printf("Error: Tangent is undefined for %.2f degrees.\n", a);
-        return 0;
-    }
-    return tan(radians);
-}
+//  function to convert degrees to radians
+double degrees_to_radians(double degrees) { return degrees * M_PI / 180.0; }
 
 void handle_choice(int choice) {
     // Taking input from the user.
-    float num1, num2;
+    double num1, num2, r;
+    char prompt[100];
+    char *ptr = prompt;
 
     // Prompting the user to enter two numbers.
     if (choice <= 4) {
-        printf("Enter first number: ");
-        scanf("%f", &num1);
-        printf("Enter second number: ");
-        scanf("%f", &num2);
+        ptr = "Enter first number: ";
+        num1 = get_number(ptr);
+        // Clear the line after first input
+        printf("\x1b[1A\x1b[0J");
+
+        ptr = "Enter second number: ";
+        num2 = get_number(ptr);
+        // Clear the line after second input
+        printf("\x1b[1A\x1b[0J");
     } else if (choice >= 5 && choice <= 10) {
-        printf("Enter the desired number: ");
-        scanf("%f", &num1);
+
+        if (choice >= 8 && choice <= 10) {
+            ptr = "Enter angle in degrees: ";
+        } else {
+            ptr = "Enter the desired number: ";
+        }
+        num1 = get_number(ptr);
+        // Clear the line after the desired input
+        printf("\x1b[1A\x1b[0J");
     }
 
     switch (choice) {
         case 1: {
-            printf("The sum is: %.2f\n", add(num1, num2));
+            r = add(num1, num2);
+            printf("The sum of %g and %g is: %g\n", num1, num2, r);
             break;
         }
 
         case 2: {
-            printf("The difference is: %.2f\n", difference(num1, num2));
+            r = substract(num1, num2);
+            printf("The result of %g - %g is: %g\n", num1, num2, r);
             break;
         }
 
         case 3: {
-            printf("The product is: %.2f\n", product(num1, num2));
+            r = multiply(num1, num2);
+            printf("The product of %g and %g is: %g\n", num1, num2, r);
             break;
         }
 
         case 4: {
-            printf("The quotient is: %.2f\n", quotient(num1, num2));
+            r = devide(num1, num2);
+            printf("The quotient of %g and %g is: %g\n", num1, num2, r);
             break;
         }
 
         case 5: {
-            printf("The square root of %.2f is: %.2f\n", num1, root(num1));
+            r = root(num1);
+            printf("The square root of %g is: %g\n", num1, r);
             break;
         }
 
         case 6: {
-            printf("The logarithm base 10 of %.2f is: %.2f\n", num1,
-                   log_base10(num1));
+            r = log_base10(num1);
+            printf("The logarithm base 10 of %g is: %g\n", num1, r);
             break;
         }
 
         case 7: {
-            printf("The natural logarithm of %.2f is: %.2f\n", num1,
-                   natural_log(num1));
+            r = natural_log(num1);
+            printf("The natural logarithm of %g is: %g\n", num1, r);
             break;
         }
+
         case 8: {
-            printf("The sine of %.2f degrees is: %.4f\n", num1, sine(num1));
+            r = sine(degrees_to_radians(num1));
+            printf("The sine of %g degrees is: %g\n", num1, r);
             break;
         }
+
         case 9: {
-            printf("The cosine of %.2f degrees is: %.4f\n", num1, cosine(num1));
+            r = cosine(degrees_to_radians(num1));
+            printf("The cosine of %g degrees is: %g\n", num1, r);
             break;
         }
+
         case 10: {
-            printf("The tangent of %.2f degrees is: %.4f\n", num1,
-                   tangent(num1));
+            r = tangent(degrees_to_radians(num1));
+            printf("The tangent of %g degrees is: %g\n", num1, r);
             break;
         }
     }
+}
+
+// function to get a number from the user
+double get_number(char *prompt) {
+    double number;
+    char buffer[100];
+    bool success = false;
+
+    while (!success) {
+        // Clear current line before printing prompt
+        printf("\r\033[2K");  // move to start and clear line
+        printf("%s", prompt);
+        fflush(stdout);
+        fgets(buffer, sizeof(buffer), stdin);
+
+        // Try to parse a double
+        if (sscanf(buffer, "%lf", &number) == 1) {
+            success = true;
+        } else {
+            // clearing the whole line
+            printf("\x1b[1A\x1b[1K");
+        }
+    }
+
+    return number;
+}
+
+// function to ask the user whether to continue or not
+bool ask_continue(void) {
+    char buffer[100];
+    char ch;
+    bool valid = false;
+
+    // Prompting the user to continue or not.
+    while (!valid) {
+        printf("Do you want to continue [y/n]: ");
+        fgets(buffer, sizeof(buffer), stdin);
+
+        // sscanf parses the first non-whitespace character
+        if (sscanf(buffer, " %c", &ch) == 1) {
+            if (ch == 'y' || ch == 'n' || ch == 'Y' || ch == 'N') {
+                valid = true;
+            } else {
+                // Clear invalid line (optional)
+                printf("\x1b[1A\x1b[0J");  // Move up and clear line
+            }
+        }
+    }
+
+    // Optional: clear this prompt line if answer is 'n'
+    if (ch == 'n' || ch == 'N') {
+        printf("\x1b[1A\x1b[0J");
+        return false;
+    }
+
+    return true;
 }
