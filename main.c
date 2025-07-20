@@ -60,10 +60,10 @@ int main(void) {
 // function to print the welcome message
 void print_welcome(void) {
     // clearing the whole screen before initializing
-    printf("\x1b[2J]\x1b[H");
+    printf("\x1b[2J\x1b[H");
 
     // printing the welcome message.
-    printf("Welcome to the Looping Calculator!\n");
+    printf("\x1b[38;5;82mWelcome to the Looping Calculator!\n\x1b[0m");
     printf("--------------------------------------------------\n\n");
 }
 
