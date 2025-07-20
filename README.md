@@ -77,7 +77,7 @@ This project is licensed under the [MIT License](./LICENSE).
 
 For any questions or contributions, feel free to reach out:
 
-[![Gmail](https://img.shields.io/badge/Send%20Mail-EA4335?style=for-the-badge&color=171A21&labelColor=EA4335&logo=gmail&logoColor=white)](mailto:rafisarkar0128@gmail.com)
+[![Gmail](https://img.shields.io/badge/Send%20Mail-EA4335?style=for-the-badge&color=171A21&labelColor=EA4335&logo=gmail&logoColor=white)](mailto:rafisarkar0128@proton.me)
 [![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://facebook.com/rafisarkar0128)
 [![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/rafisarkar0128/)
 [![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/users/720186844540567583/)
