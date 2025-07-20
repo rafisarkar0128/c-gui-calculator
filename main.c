@@ -2,6 +2,11 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+//  Define PI constant since M_PI might not be available
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 // function prototypes
 void print_welcome(void);
 void print_choices(void);
@@ -14,6 +19,10 @@ double devide(double, double);
 double root(double);
 double log_base10(double);
 double natural_log(double);
+double sine(double);
+double cosine(double);
+double tangent(double);
+double degrees_to_radians(double);
 void handle_choice(int);
 double get_number(char *);
 bool ask_continue(void);
@@ -30,9 +39,7 @@ int main(void) {
 
         // Getting the user's choice of operation.
         choice = get_choice();
-
-        // If the user chooses to exit, break the loop.
-        if (choice == 8) break;
+        if (choice == 11) break;
 
         // Displaying the user's choice.
         show_choice(choice);
@@ -70,7 +77,10 @@ void print_choices(void) {
     printf("5. Square Root\n");
     printf("6. Log (Base 10)\n");
     printf("7. Natural Log (ln)\n");
-    printf("8. Exit\n");
+    printf("8. Sine (sin)\n");
+    printf("9. Cosine (cos)\n");
+    printf("10. Tangent (tan)\n");
+    printf("11. Exit\n");
 }
 
 // function to get the user's choice of operation
@@ -84,13 +94,13 @@ int get_choice(void) {
 
     // looping until a valid choice is entered
     while (!success) {
-        printf("Enter your choice (1-8): ");
+        printf("Enter your choice (1-11): ");
         fgets(buffer, sizeof(buffer), stdin);
 
         // Try to parse an integer
         if (sscanf(buffer, "%d", &choice) == 1) {
-            // if the choice is valid, set success to true
-            if (choice >= 1 && choice <= 8) {
+
+            if (choice >= 1 && choice <= 11) {
                 success = true;
             } else {
                 // clearing the whole line
@@ -102,8 +112,7 @@ int get_choice(void) {
         }
     }
 
-    // clearing the whole line again
-    printf("\x1b[10A\x1b[0J");
+    printf("\x1b[13A\x1b[0J");
     return choice;
 }
 
@@ -137,6 +146,18 @@ void show_choice(int choice) {
         }
         case 7: {
             printf("Natural Log (ln)");
+            break;
+        }
+        case 8: {
+            printf("Sine (sin)");
+            break;
+        }
+        case 9: {
+            printf("Cosine (cos)");
+            break;
+        }
+        case 10: {
+            printf("Tangent (tan)");
             break;
         }
         default: {
@@ -192,6 +213,15 @@ double natural_log(double a) {
     return log(a);
 }
 
+double sine(double a) { return sin(a); }
+
+double cosine(double a) { return cos(a); }
+
+double tangent(double a) { return tan(a); }
+
+//  function to convert degrees to radians
+double degrees_to_radians(double degrees) { return degrees * M_PI / 180.0; }
+
 void handle_choice(int choice) {
     // Taking input from the user.
     double num1, num2, r;
@@ -209,8 +239,13 @@ void handle_choice(int choice) {
         num2 = get_number(ptr);
         // Clear the line after second input
         printf("\x1b[1A\x1b[0J");
-    } else if (choice >= 5 && choice <= 7) {
-        ptr = "Enter the desired number: ";
+    } else if (choice >= 5 && choice <= 10) {
+
+        if (choice >= 8 && choice <= 10) {
+            ptr = "Enter angle in degrees: ";
+        } else {
+            ptr = "Enter the desired number: ";
+        }
         num1 = get_number(ptr);
         // Clear the line after the desired input
         printf("\x1b[1A\x1b[0J");
@@ -256,6 +291,24 @@ void handle_choice(int choice) {
         case 7: {
             r = natural_log(num1);
             printf("The natural logarithm of %g is: %g\n", num1, r);
+            break;
+        }
+
+        case 8: {
+            r = sine(degrees_to_radians(num1));
+            printf("The sine of %g degrees is: %g\n", num1, r);
+            break;
+        }
+
+        case 9: {
+            r = cosine(degrees_to_radians(num1));
+            printf("The cosine of %g degrees is: %g\n", num1, r);
+            break;
+        }
+
+        case 10: {
+            r = tangent(degrees_to_radians(num1));
+            printf("The tangent of %g degrees is: %g\n", num1, r);
             break;
         }
     }
