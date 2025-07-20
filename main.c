@@ -90,7 +90,12 @@ int get_choice(void) {
         // Try to parse an integer
         if (sscanf(buffer, "%d", &choice) == 1) {
             // if the choice is valid, set success to true
-            if (choice >= 1 && choice <= 8) success = true;
+            if (choice >= 1 && choice <= 8) {
+                success = true;
+            } else {
+                // clearing the whole line
+                printf("\x1b[1A\x1b[0J");
+            }
         } else {
             // clearing the whole line
             printf("\x1b[1A\x1b[0J");
