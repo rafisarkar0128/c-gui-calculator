@@ -1,6 +1,11 @@
 #include <math.h>
 #include <stdio.h>
 
+// ALTERNATIVE: Define M_PI manually if not available
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 // function prototypes
 void print_choices(void);
 int get_choice(void);
@@ -12,6 +17,9 @@ float quotient(float, float);
 float root(float);
 float log_base10(float a);
 float natural_log(float a);
+float sine(float a);
+float cosine(float a);
+float tangent(float a);
 void handle_choice(int);
 
 // main function
@@ -27,7 +35,7 @@ int main(void) {
 
         // Getting the choice from the user.
         choice = get_choice();
-        if (choice == 8) break;
+        if (choice == 11) break;
 
         // Displaying the user's choice.
         printf("\n");
@@ -59,8 +67,11 @@ void print_choices(void) {
     printf("5. Square Root\n");
     printf("6. Log (Base 10)\n");
     printf("7. Natural Log (ln)\n");
-    printf("8. Exit\n");
-    printf("Enter your choice (1-8): ");
+    printf("8. sine(sin)\n");
+    printf("9. cosine(cos)\n");
+    printf("10. tangent(tan)\n");
+    printf("11. Exit\n");
+    printf("Enter your choice (1-11): ");
 }
 
 // function to get the user's choice of operation
@@ -73,7 +84,7 @@ int get_choice(void) {
         scanf("%d", &choice);
 
         // If the choice is valid (between 1 and 8), break the loop.
-        if (choice >= 1 && choice <= 8) break;
+        if (choice >= 1 && choice <= 11) break;
 
         // If the choice is invalid, prompt the user again.
         printf("Invalid choice. Please select a valid operation.\n");
@@ -125,6 +136,21 @@ void show_choice(int choice) {
         }
 
         case 8: {
+            printf("You chose Sine (sin).\n");
+            break;
+        }
+
+        case 9: {
+            printf("You chose Cosine (cos).\n");
+            break;
+        }
+
+        case 10: {
+            printf("You chose Tangent (tan).\n");
+            break;
+        }
+
+        case 11: {
             printf("You chose to Exit the calculator.\n");
             break;
         }
@@ -177,6 +203,34 @@ float natural_log(float a) {
     return log(a);
 }
 
+// function to calculate sine of an angle (input in degrees)
+float sine(float a) {
+    // Convert degrees to radians for calculation
+    float radians = a * M_PI / 180.0;
+    return sin(radians);
+}
+
+// function to calculate cosine of an angle (input in degrees)
+float cosine(float a) {
+    // Convert degrees to radians for calculation
+    float radians = a * M_PI / 180.0;
+    return cos(radians);
+}
+
+// function to calculate tangent of an angle (input in degrees)
+float tangent(float a) {
+    // Convert degrees to radians for calculation
+    float radians = a * M_PI / 180.0;
+
+    // Check for values where tangent is undefined (90°, 270°, etc.)
+    float normalized = fmod(a, 180.0);
+    if (fabs(normalized - 90.0) < 1e-6 || fabs(normalized + 90.0) < 1e-6) {
+        printf("Error: Tangent is undefined for %.2f degrees.\n", a);
+        return 0;
+    }
+    return tan(radians);
+}
+
 void handle_choice(int choice) {
     // Taking input from the user.
     float num1, num2;
@@ -187,7 +241,7 @@ void handle_choice(int choice) {
         scanf("%f", &num1);
         printf("Enter second number: ");
         scanf("%f", &num2);
-    } else if (choice >= 5 && choice <= 7) {
+    } else if (choice >= 5 && choice <= 10) {
         printf("Enter the desired number: ");
         scanf("%f", &num1);
     }
@@ -227,6 +281,19 @@ void handle_choice(int choice) {
         case 7: {
             printf("The natural logarithm of %.2f is: %.2f\n", num1,
                    natural_log(num1));
+            break;
+        }
+        case 8: {
+            printf("The sine of %.2f degrees is: %.4f\n", num1, sine(num1));
+            break;
+        }
+        case 9: {
+            printf("The cosine of %.2f degrees is: %.4f\n", num1, cosine(num1));
+            break;
+        }
+        case 10: {
+            printf("The tangent of %.2f degrees is: %.4f\n", num1,
+                   tangent(num1));
             break;
         }
     }
