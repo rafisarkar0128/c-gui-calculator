@@ -23,3 +23,5 @@
 gcc            # C compiler
 pkg-config     # Build configuration helper
 libgtk-3-dev   # GTK+ 3 development files (for GUI)
+
+# testing
