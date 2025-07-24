@@ -16,12 +16,13 @@ double add(double, double);
 double substract(double, double);
 double multiply(double, double);
 double devide(double, double);
-double root(double);
+double root(double, double);
 double log_base10(double);
 double natural_log(double);
 double sine(double);
 double cosine(double);
 double tangent(double);
+double power_function(double, double);
 double degrees_to_radians(double);
 void handle_choice(int);
 double get_number(char *);
@@ -39,7 +40,7 @@ int main(void) {
 
         // Getting the user's choice of operation.
         choice = get_choice();
-        if (choice == 11) break;
+        if (choice == 12) break;
 
         // Displaying the user's choice.
         show_choice(choice);
@@ -74,13 +75,14 @@ void print_choices(void) {
     printf("2. Subtraction\n");
     printf("3. Multiplication\n");
     printf("4. Division\n");
-    printf("5. Square Root\n");
+    printf("5. Root (nth root)\n");
     printf("6. Log (Base 10)\n");
     printf("7. Natural Log (ln)\n");
     printf("8. Sine (sin)\n");
     printf("9. Cosine (cos)\n");
     printf("10. Tangent (tan)\n");
-    printf("11. Exit\n");
+    printf("11. Power (x^y)\n");
+    printf("12. Exit\n");
 }
 
 // function to get the user's choice of operation
@@ -94,13 +96,13 @@ int get_choice(void) {
 
     // looping until a valid choice is entered
     while (!success) {
-        printf("Enter your choice (1-11): ");
+        printf("Enter your choice (1-12): ");
         fgets(buffer, sizeof(buffer), stdin);
 
         // Try to parse an integer
         if (sscanf(buffer, "%d", &choice) == 1) {
 
-            if (choice >= 1 && choice <= 11) {
+            if (choice >= 1 && choice <= 12) {
                 success = true;
             } else {
                 // clearing the whole line
@@ -112,7 +114,7 @@ int get_choice(void) {
         }
     }
 
-    printf("\x1b[13A\x1b[0J");
+    printf("\x1b[14A\x1b[0J");
     return choice;
 }
 
@@ -137,7 +139,7 @@ void show_choice(int choice) {
             break;
         }
         case 5: {
-            printf("Square Root");
+            printf("Root (nth root)");
             break;
         }
         case 6: {
@@ -158,6 +160,10 @@ void show_choice(int choice) {
         }
         case 10: {
             printf("Tangent (tan)");
+            break;
+        }
+        case 11: {
+            printf("Power (x^y)");
             break;
         }
         default: {
@@ -187,13 +193,18 @@ double devide(double a, double b) {
 }
 
 // function to find the square root of a number
-double root(double a) {
-    if (a < 0) {
-        printf("Error: Cannot find the square root of a negative number.\n");
+double root(double number, double n) {
+    if (number < 0) {
+        printf("Cannot calculate complex numbers.\n");
         return 0;
     }
 
-    return sqrt(a);
+    if (n == 0) {
+        printf("Error: Root degree cannot be zero.\n");
+        return 0;
+    }
+
+    return pow(number, 1.0 / n);
 }
 
 // function to calculate logarithm base 10 and natural logarithm
@@ -219,6 +230,25 @@ double cosine(double a) { return cos(a); }
 
 double tangent(double a) { return tan(a); }
 
+double power_function(double base, double exponent) {
+    // Handle special cases
+    if (base == 0 && exponent < 0) {
+        printf(
+            "Error: Cannot raise zero to a negative power (division by "
+            "zero).\n");
+        return 0;
+    }
+
+    if (base < 0 && (exponent != floor(exponent))) {
+        printf(
+            "Error: Cannot raise negative number to non-integer power (complex "
+            "result).\n");
+        return 0;
+    }
+
+    return pow(base, exponent);
+}
+
 //  function to convert degrees to radians
 double degrees_to_radians(double degrees) { return degrees * M_PI / 180.0; }
 
@@ -229,17 +259,33 @@ void handle_choice(int choice) {
     char *ptr = prompt;
 
     // Prompting the user to enter two numbers.
-    if (choice <= 4) {
-        ptr = "Enter first number: ";
+    if (choice <= 4 || choice == 5 || choice == 11) {
+        if (choice == 11) {
+            ptr = "Enter the base number: ";
+        } else if (choice == 5) {
+            ptr = "Enter the number: ";
+        } else {
+            ptr = "Enter first number: ";
+        }
         num1 = get_number(ptr);
         // Clear the line after first input
         printf("\x1b[1A\x1b[0J");
 
-        ptr = "Enter second number: ";
+        if (choice == 11) {
+            printf("The base is: %g\n", num1);
+            ptr = "Enter the exponent (power): ";
+        } else if (choice == 5) {
+            printf("The number is: %g\n", num1);
+            ptr = "Enter the root degree: ";
+        } else {
+            ptr = "Enter second number: ";
+        }
         num2 = get_number(ptr);
         // Clear the line after second input
         printf("\x1b[1A\x1b[0J");
-    } else if (choice >= 5 && choice <= 10) {
+    } else if (choice >= 6 && choice <= 10) {
+
+    } else if (choice >= 6 && choice <= 10) {
 
         if (choice >= 8 && choice <= 10) {
             ptr = "Enter angle in degrees: ";
@@ -277,8 +323,8 @@ void handle_choice(int choice) {
         }
 
         case 5: {
-            r = root(num1);
-            printf("The square root of %g is: %g\n", num1, r);
+            r = root(num1, num2);
+            printf("The result is: %g\n", r);
             break;
         }
 
@@ -309,6 +355,12 @@ void handle_choice(int choice) {
         case 10: {
             r = tangent(degrees_to_radians(num1));
             printf("The tangent of %g degrees is: %g\n", num1, r);
+            break;
+        }
+
+        case 11: {
+            r = power_function(num1, num2);
+            printf("The result is: %g\n", r);
             break;
         }
     }
