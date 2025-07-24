@@ -25,7 +25,7 @@ double tangent(double);
 double power_function(double, double);
 double degrees_to_radians(double);
 void handle_choice(int);
-double get_number(char *);
+double get_number(char[]);
 bool ask_continue(void);
 
 // main function
@@ -40,21 +40,26 @@ int main(void) {
 
         // Getting the user's choice of operation.
         choice = get_choice();
-        if (choice == 12) break;
 
         // Displaying the user's choice.
         show_choice(choice);
+
+        if (choice == 12) {
+            printf("\n");
+            break;
+        }
 
         // handling the choice of operations.
         handle_choice(choice);
 
         // asking the user whether to continue or not
+        printf("\n");
         if (!ask_continue()) break;
     }
 
     // Exiting the calculator.
-    printf("Exiting the calculator. Goodbye!\n");
     printf("--------------------------------------------------\n");
+    printf("\x1b[31mExiting the calculator. Goodbye!\n\x1b[0m\n");
     return 0;
 }
 
@@ -64,22 +69,22 @@ void print_welcome(void) {
     printf("\x1b[2J\x1b[H");
 
     // printing the welcome message.
-    printf("\x1b[38;5;82mWelcome to the Looping Calculator!\n\x1b[0m");
+    printf("\x1b[38;5;82mWelcome to the Looping Calculator!\x1b[0m\n");
     printf("--------------------------------------------------\n\n");
 }
 
 // function to print the choices of operations
 void print_choices(void) {
     printf("Choose an operation : \n");
-    printf("1. Addition\n");
-    printf("2. Subtraction\n");
-    printf("3. Multiplication\n");
-    printf("4. Division\n");
-    printf("5. Root (nth root)\n");
-    printf("6. Log (Base 10)\n");
-    printf("7. Natural Log (ln)\n");
-    printf("8. Sine (sin)\n");
-    printf("9. Cosine (cos)\n");
+    printf("1.  Addition\n");
+    printf("2.  Subtraction\n");
+    printf("3.  Multiplication\n");
+    printf("4.  Division\n");
+    printf("5.  Root (nth root)\n");
+    printf("6.  Log (Base 10)\n");
+    printf("7.  Natural Log (ln)\n");
+    printf("8.  Sine (sin)\n");
+    printf("9.  Cosine (cos)\n");
     printf("10. Tangent (tan)\n");
     printf("11. Power (x^y)\n");
     printf("12. Exit\n");
@@ -91,7 +96,7 @@ int get_choice(void) {
     char buffer[100];
     bool success = false;
 
-    // Printing the choices of operations.
+    // Printing and getting the choices of operations.
     print_choices();
 
     // looping until a valid choice is entered
@@ -255,45 +260,47 @@ double degrees_to_radians(double degrees) { return degrees * M_PI / 180.0; }
 void handle_choice(int choice) {
     // Taking input from the user.
     double num1, num2, r;
-    char prompt[100];
-    char *ptr = prompt;
 
     // Prompting the user to enter two numbers.
-    if (choice <= 4 || choice == 5 || choice == 11) {
-        if (choice == 11) {
-            ptr = "Enter the base number: ";
-        } else if (choice == 5) {
-            ptr = "Enter the number: ";
-        } else {
-            ptr = "Enter first number: ";
-        }
-        num1 = get_number(ptr);
-        // Clear the line after first input
+    if (choice <= 4) {
+        // Getting and then clear the line after first input
+        num1 = get_number("Enter first number: ");
         printf("\x1b[1A\x1b[0J");
 
-        if (choice == 11) {
-            printf("The base is: %g\n", num1);
-            ptr = "Enter the exponent (power): ";
-        } else if (choice == 5) {
-            printf("The number is: %g\n", num1);
-            ptr = "Enter the root degree: ";
-        } else {
-            ptr = "Enter second number: ";
-        }
-        num2 = get_number(ptr);
-        // Clear the line after second input
+        // Getting and then clear the line after first input
+        num2 = get_number("Enter second number: ");
         printf("\x1b[1A\x1b[0J");
-    } else if (choice >= 6 && choice <= 10) {
+    }
 
-    } else if (choice >= 6 && choice <= 10) {
+    if (choice == 5) {
+        // Getting and then clear the line after first input
+        num1 = get_number("Enter the desired number: ");
+        printf("\x1b[1A\x1b[0J");
 
-        if (choice >= 8 && choice <= 10) {
-            ptr = "Enter angle in degrees: ";
-        } else {
-            ptr = "Enter the desired number: ";
-        }
-        num1 = get_number(ptr);
-        // Clear the line after the desired input
+        // Getting and then clear the line after first input
+        num2 = get_number("Enter the root degree: ");
+        printf("\x1b[1A\x1b[0J");
+    }
+
+    if (choice == 6 && choice == 7) {
+        // Getting and then clear the line after first input
+        num1 = get_number("Enter the desired number: ");
+        printf("\x1b[1A\x1b[0J");
+    }
+
+    if (choice >= 8 && choice <= 10) {
+        // Getting and then clear the line after first input
+        num1 = get_number("Enter angle (in degrees): ");
+        printf("\x1b[1A\x1b[0J");
+    }
+
+    if (choice == 11) {
+        // Getting and then clear the line after first input
+        num1 = get_number("Enter the base number: ");
+        printf("\x1b[1A\x1b[0J");
+
+        // Getting and then clear the line after first input
+        num2 = get_number("Enter the exponent (power): ");
         printf("\x1b[1A\x1b[0J");
     }
 
@@ -324,7 +331,7 @@ void handle_choice(int choice) {
 
         case 5: {
             r = root(num1, num2);
-            printf("The result is: %g\n", r);
+            printf("The %g root of %g is: %g\n", num2, num1, r);
             break;
         }
 
@@ -360,14 +367,15 @@ void handle_choice(int choice) {
 
         case 11: {
             r = power_function(num1, num2);
-            printf("The result is: %g\n", r);
+            printf("The result of %g raised to the power of %g is: %g\n", num1,
+                   num2, r);
             break;
         }
     }
 }
 
 // function to get a number from the user
-double get_number(char *prompt) {
+double get_number(char prompt[]) {
     double number;
     char buffer[100];
     bool success = false;
