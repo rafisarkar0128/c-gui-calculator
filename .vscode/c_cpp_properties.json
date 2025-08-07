@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "UCRT64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/msys64/ucrt64/include",
+                "C:/msys64/ucrt64/include/gtk-3.0",
+                "C:/msys64/ucrt64/include/glib-2.0",
+                "C:/msys64/ucrt64/lib/glib-2.0/include",
+                "C:/msys64/ucrt64/include/pango-1.0",
+                "C:/msys64/ucrt64/include/harfbuzz",
+                "C:/msys64/ucrt64/include/cairo",
+                "C:/msys64/ucrt64/include/gdk-pixbuf-2.0",
+                "C:/msys64/ucrt64/include/atk-1.0"
+            ],
+            "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
+            "compilerPath": "C:/msys64/ucrt64/bin/gcc.exe",
+            "cStandard": "c17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}

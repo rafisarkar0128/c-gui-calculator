@@ -1,0 +1,64 @@
+{
+    "tasks": [
+        {
+            "label": "Build GTK C App",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "`pkg-config --cflags gtk+-3.0`",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.exe",
+                "`pkg-config --libs gtk+-3.0`"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": "build"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: gcc.exe build active file",
+            "command": "C:/msys64/ucrt64/bin/gcc.exe",
+            "args": [
+                "-mms-bitfields",
+                "-IC:/msys64/ucrt64/include/gtk-3.0",
+                "-IC:/msys64/ucrt64/include",
+                "-IC:/msys64/ucrt64/include/glib-2.0",
+                "-IC:/msys64/ucrt64/lib/glib-2.0/include",
+                "-IC:/msys64/ucrt64/include/pango-1.0",
+                "-IC:/msys64/ucrt64/include/harfbuzz",
+                "-IC:/msys64/ucrt64/include/cairo",
+                "-IC:/msys64/ucrt64/include/gdk-pixbuf-2.0",
+                "-IC:/msys64/ucrt64/include/atk-1.0",
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-lgtk-3",
+                "-lgdk-3",
+                "-lpangocairo-1.0",
+                "-lpango-1.0",
+                "-latk-1.0",
+                "-lcairo",
+                "-lgdk_pixbuf-2.0",
+                "-lgio-2.0",
+                "-lgobject-2.0",
+                "-lglib-2.0"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "GTK build task for C/C++ extension"
+        }
+    ],
+    "version": "2.0.0"
+}
