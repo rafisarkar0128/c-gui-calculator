@@ -1,11 +1,16 @@
+#include <gtk/gtk.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
-//  Define PI constant since M_PI might not be available
-#ifndef M_PI
+// Define PI constant since M_PI might not be available
 #define M_PI 3.14159265358979323846
-#endif
+
+typedef struct {
+    GtkWidget *entry;
+    GString *input;
+} CalculatorState;
 
 // function prototypes
 void print_welcome(void);
@@ -28,39 +33,21 @@ void handle_choice(int);
 double get_number(char[]);
 bool ask_continue(void);
 
-// main function
-int main(void) {
-    int choice;
-    char ch;
+// GTK function prototypes
+static void on_activate(GtkApplication *app, gpointer user_data);
+static void on_button_clicked(GtkWidget *widget, gpointer user_data);
 
-    // Getting the choice from the user.
-    while (true) {
-        // Printing the welcome message.
-        print_welcome();
+// The main function
+int main(int argc, char **argv) {
+    GtkApplication *app;
+    int status;
 
-        // Getting the user's choice of operation.
-        choice = get_choice();
+    app = gtk_application_new("test.gtk.app", G_APPLICATION_DEFAULT_FLAGS);
+    g_signal_connect(app, "activate", G_CALLBACK(on_activate), NULL);
+    status = g_application_run(G_APPLICATION(app), argc, argv);
+    g_object_unref(app);
 
-        // Displaying the user's choice.
-        show_choice(choice);
-
-        if (choice == 12) {
-            printf("\n");
-            break;
-        }
-
-        // handling the choice of operations.
-        handle_choice(choice);
-
-        // asking the user whether to continue or not
-        printf("\n");
-        if (!ask_continue()) break;
-    }
-
-    // Exiting the calculator.
-    printf("--------------------------------------------------\n");
-    printf("\x1b[31mExiting the calculator. Goodbye!\n\x1b[0m\n");
-    return 0;
+    return status;
 }
 
 // function to print the welcome message
@@ -428,4 +415,85 @@ bool ask_continue(void) {
     }
 
     return true;
+}
+
+static void on_button_clicked(GtkWidget *widget, gpointer user_data) {
+    CalculatorState *state = (CalculatorState *)user_data;
+    const gchar *label = gtk_button_get_label(GTK_BUTTON(widget));
+
+    if (strcmp(label, "C") == 0) {
+        g_string_set_size(state->input, 0);
+    } else if (strcmp(label, "=") == 0) {
+        double result = g_strtod(state->input->str, NULL);
+        g_string_printf(state->input, "%g", result);
+    } else {
+        g_string_append(state->input, label);
+    }
+
+    gtk_entry_set_text(GTK_ENTRY(state->entry), state->input->str);
+}
+
+// A function to activate the program
+static void on_activate(GtkApplication *app, gpointer user_data) {
+    CalculatorState *state = g_new0(CalculatorState, 1);
+    state->input = g_string_new("");
+
+    // Create and set title, size, and position of the main window
+    GtkWidget *window = gtk_application_window_new(app);
+    gtk_window_set_title(GTK_WINDOW(window), "C GUI Calculator");
+    gtk_window_set_default_size(GTK_WINDOW(window), 300, 400);
+    gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+
+    // Create a container (box) to hold widgets (display, buttons, etc.)
+    GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
+    gtk_container_add(GTK_CONTAINER(window), box);
+
+    // Create and set alignment, state, and txt of the main diplay area (Output)
+    state->entry = gtk_entry_new();
+    gtk_entry_set_alignment(GTK_ENTRY(state->entry), 1.0);  // right-align
+    gtk_editable_set_editable(GTK_EDITABLE(state->entry), FALSE);
+    gtk_entry_set_text(GTK_ENTRY(state->entry), "");
+    gtk_widget_set_hexpand(state->entry, TRUE);
+    gtk_widget_set_vexpand(state->entry, FALSE);  // No vertical expansion
+    gtk_box_pack_start(GTK_BOX(box), state->entry, TRUE, TRUE, 0);
+
+    // Set the font size
+    GtkCssProvider *provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(provider, "entry { font-size: 24px; }", -1,
+                                    NULL);
+
+    GtkStyleContext *context = gtk_widget_get_style_context(state->entry);
+    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider),
+                                   GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    // Create and set buttons for the button grid
+    GtkWidget *grid = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid), 10);
+    gtk_grid_set_row_homogeneous(GTK_GRID(grid), TRUE);
+    gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
+
+    const gchar *buttons[5][4] = {{"C", " ", "%", "/"},
+                                  {"7", "8", "9", "*"},
+                                  {"4", "5", "6", "-"},
+                                  {"1", "2", "3", "+"},
+                                  {" ", "0", ".", "="}};
+
+    for (int row = 0; row < 5; row++) {
+        for (int col = 0; col < 4; col++) {
+            const gchar *label = buttons[row][col];
+            if (strlen(label) == 0) continue;
+
+            GtkWidget *button = gtk_button_new_with_label(label);
+            gtk_widget_set_hexpand(button, TRUE);
+            gtk_widget_set_vexpand(button, TRUE);
+            gtk_grid_attach(GTK_GRID(grid), button, col, row, 1, 1);
+            g_signal_connect(button, "clicked", G_CALLBACK(on_button_clicked),
+                             state);
+        }
+    }
+    gtk_box_pack_start(GTK_BOX(box), grid, TRUE, TRUE, 0);
+
+    // Showing all the widgets
+    gtk_widget_show_all(window);
 }
