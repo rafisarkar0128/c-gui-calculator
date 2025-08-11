@@ -10,10 +10,60 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+/**
+ * =======================================================================
+ *                            DATA STRUCTURES
+ * =======================================================================
+ */
+
+/**
+ * Main calculator state - holds GUI widgets and current input
+ */
 typedef struct {
-    GtkWidget *entry;
-    GString *input;
+    GtkWidget *entry;      // Display entry widget
+    GString *input;        // Current input string buffer
+    char last_error[128];  // Last error message
+    bool just_evaluated;   // Flag to clear display on next number input
 } CalculatorState;
+
+/**
+ * =======================================================================
+ *                            UTILITY FUNCTIONS
+ * =======================================================================
+ */
+
+/**
+ * Clear error buffer by setting first character to null terminator
+ */
+static void clear_error(char *error_buffer, size_t error_size) {
+    if (error_buffer && error_size > 0) {
+        error_buffer[0] = '\0';
+    }
+}
+
+/**
+ * Check if character is valid for function names (lowercase letters)
+ */
+static bool is_function_char(char c) { return (c >= 'a' && c <= 'z'); }
+
+/**
+ * =======================================================================
+ * DYNAMIC STACKS FOR EXPRESSION PARSING
+ * =======================================================================
+ */
+
+/**
+ * Main expression evaluator - converts to RPN then evaluates
+ * @param expression: Mathematical expression string
+ * @param success: Output parameter indicating if evaluation succeeded
+ * @param error_buffer: Buffer for error messages
+ * @param error_size: Size of error buffer
+ * @return: Computed result, or 0 if error occurred
+ */
+static double evaluate_expression(const char *expression, bool *success,
+                                  char *error_buffer, size_t error_size) {
+    clear_error(error_buffer, error_size);
+}
 
 /**
  * =======================================================================
@@ -38,19 +88,75 @@ static void on_button_clicked(GtkWidget *widget, gpointer user_data) {
     // Clear button - reset calculator state
     if (strcmp(button_label, "C") == 0) {
         g_string_set_size(state->input, 0);
+        clear_error(state->last_error, sizeof(state->last_error));
+        state->just_evaluated = false;
         update_display(state, "0");
         return;
     }
 
     // Equals button - evaluate current expression
     if (strcmp(button_label, "=") == 0) {
-        double result = g_strtod(state->input->str, NULL);
-        g_string_printf(state->input, "%g", result);
-        update_display(state, state->input->str);
+        bool evaluation_success = false;
+        double result =
+            evaluate_expression(state->input->str, &evaluation_success,
+                                state->last_error, sizeof(state->last_error));
+
+        if (evaluation_success) {
+            // Display result and prepare for next calculation
+            g_string_printf(state->input, "%g", result);
+            update_display(state, state->input->str);
+            state->just_evaluated = true;  // Flag to clear on next number input
+        } else {
+            // Display error message
+            update_display(state, "Error");
+            state->just_evaluated = true;
+        }
         return;
     }
 
-    g_string_append(state->input, button_label);
+    // Auto-clear behavior: if we just showed a result/error and user enters
+    // a number or function, clear the input first to start fresh
+    if (state->just_evaluated) {
+        bool should_clear =
+            (button_label[0] >= '0' && button_label[0] <= '9') ||  // Digit
+            strcmp(button_label, ".") == 0 ||   // Decimal point
+            is_function_char(button_label[0]);  // Function
+
+        if (should_clear) {
+            g_string_set_size(state->input, 0);
+            state->just_evaluated = false;
+        } else if (strchr("+-*/^()%", button_label[0]) != NULL) {
+            // If user enters an operator, keep the result and continue
+            // calculation
+            state->just_evaluated = false;
+        }
+    }
+
+    // Handle specific button types
+    if (strcmp(button_label, "sqrt") == 0) {
+        g_string_append(state->input, "sqrt(");
+    } else if (strcmp(button_label, "log") == 0) {
+        g_string_append(state->input, "log(");
+    } else if (strcmp(button_label, "ln") == 0) {
+        g_string_append(state->input, "ln(");
+    } else if (strcmp(button_label, "sin") == 0) {
+        g_string_append(state->input, "sin(");
+    } else if (strcmp(button_label, "cos") == 0) {
+        g_string_append(state->input, "cos(");
+    } else if (strcmp(button_label, "tan") == 0) {
+        g_string_append(state->input, "tan(");
+    } else if (strcmp(button_label, "^") == 0) {
+        g_string_append(state->input, "^");
+    } else if (strcmp(button_label, "⌫") == 0) {
+        // Backspace - remove last character
+        if (state->input->len > 0) {
+            g_string_truncate(state->input, state->input->len - 1);
+        }
+    } else {
+        // For all other buttons (digits, operators, parentheses), append
+        // directly
+        g_string_append(state->input, button_label);
+    }
 
     // Update display with current input
     update_display(state, state->input->str);
@@ -128,7 +234,8 @@ static void build_user_interface(GtkApplication *app, CalculatorState *state) {
                              FALSE);  // Fixed size for clean layout
     g_signal_connect(window, "destroy", G_CALLBACK(on_window_destroy), state);
 
-    // Create main vertical container to hold widgets (display, buttons, etc.)
+    // Create main vertical container to hold widgets (display, buttons,
+    // etc.)
     GtkWidget *main_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
     gtk_container_set_border_width(GTK_CONTAINER(main_container), 15);
     gtk_container_add(GTK_CONTAINER(window), main_container);
@@ -136,9 +243,11 @@ static void build_user_interface(GtkApplication *app, CalculatorState *state) {
     // Create display (entry) to shows current input and results
     state->entry = gtk_entry_new();
     gtk_entry_set_alignment(GTK_ENTRY(state->entry), 1.0);  // Right-align
-    gtk_editable_set_editable(GTK_EDITABLE(state->entry), FALSE);  // Read-only
+    gtk_editable_set_editable(GTK_EDITABLE(state->entry),
+                              FALSE);  // Read-only
     gtk_entry_set_text(GTK_ENTRY(state->entry), "0");
-    gtk_widget_set_size_request(state->entry, -1, 50);  // Set minimum height
+    gtk_widget_set_size_request(state->entry, -1,
+                                50);  // Set minimum height
     gtk_box_pack_start(GTK_BOX(main_container), state->entry, FALSE, FALSE, 0);
 
     // Apply CSS styling for larger, more readable font
@@ -238,6 +347,8 @@ static void on_application_activate(GtkApplication *app, gpointer user_data) {
     }
 
     state->input = g_string_new("");
+    state->just_evaluated = false;
+    clear_error(state->last_error, sizeof(state->last_error));
 
     // Build and show the user interface
     build_user_interface(app, state);
