@@ -16,6 +16,12 @@ typedef struct {
 } CalculatorState;
 
 /**
+ * =======================================================================
+ *             GUI EVENT HANDLERS AND INTERFACE FUNCTIONS
+ * =======================================================================
+ */
+
+/**
  * Update the calculator display with new text
  */
 static void update_display(CalculatorState *state, const char *text) {
@@ -51,6 +57,36 @@ static void on_button_clicked(GtkWidget *widget, gpointer user_data) {
 }
 
 /**
+ * Keyboard input handler - provides shortcuts for common operations
+ */
+static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event,
+                             gpointer user_data) {
+    CalculatorState *state = (CalculatorState *)user_data;
+    guint key = event->keyval;
+
+    // Enter key - same as equals button
+    if (key == GDK_KEY_Return || key == GDK_KEY_KP_Enter) {
+        // Create temporary button to reuse existing equals logic
+        GtkWidget *equals_button = gtk_button_new_with_label("=");
+        on_button_clicked(equals_button, user_data);
+        g_object_ref_sink(equals_button);  // Clean up temporary widget
+        g_object_unref(equals_button);
+        return TRUE;  // Event handled
+    }
+
+    // Backspace key - same as backspace button
+    if (key == GDK_KEY_BackSpace) {
+        if (state->input->len > 0) {
+            g_string_truncate(state->input, state->input->len - 1);
+        }
+        update_display(state, state->input->str);
+        return TRUE;  // Event handled
+    }
+
+    return FALSE;  // Let default handler process other keys
+}
+
+/**
  * Create a button with label and connect to click handler
  */
 static GtkWidget *create_button(const char *label, CalculatorState *state) {
@@ -71,6 +107,12 @@ static void on_window_destroy(GtkWidget *widget, gpointer user_data) {
         free(state);
     }
 }
+
+/**
+ * =======================================================================
+ *                      USER INTERFACE CONSTRUCTION
+ * =======================================================================
+ */
 
 /**
  * Build the complete calculator user interface
@@ -165,9 +207,20 @@ static void build_user_interface(GtkApplication *app, CalculatorState *state) {
         }
     }
 
+    // Enable keyboard shortcuts for the entire window
+    gtk_widget_set_can_focus(window, TRUE);
+    g_signal_connect(window, "key-press-event", G_CALLBACK(on_key_press),
+                     state);
+
     // Show all widgets
     gtk_widget_show_all(window);
 }
+
+/**
+ * =======================================================================
+ *                          APPLICATION LIFECYCLE
+ * =======================================================================
+ */
 
 /**
  * Application activation handler - called when app starts
