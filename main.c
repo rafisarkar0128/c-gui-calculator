@@ -1,3 +1,9 @@
+/**
+ * ========================================================================
+ *    C GUI CALCULATOR - Scientific Calculator with Expression Parsing
+ * ========================================================================
+ */
+
 #include <gtk/gtk.h>
 #include <math.h>
 #include <stdbool.h>
@@ -115,7 +121,112 @@ static bool is_right_associative(char op) { return op == '^'; }
 
 /**
  * =======================================================================
- * EXPRESSION PARSER - TOKENIZER AND SHUNTING YARD ALGORITHM
+ *             MATHEMATICAL FUNCTIONS WITH DOMAIN VALIDATION
+ * =======================================================================
+ */
+
+/**
+ * Convert degrees to radians for trigonometric functions
+ * Makes trig functions user-friendly by accepting degrees
+ */
+static inline double deg2rad(double degrees) { return degrees * M_PI / 180.0; }
+
+/**
+ * Safe division - checks for division by zero
+ * @param a: dividend
+ * @param b: divisor
+ * @param out: result pointer
+ * @param err: error message buffer
+ * @param es: error buffer size
+ * @return: true if successful, false if error
+ */
+static bool safe_divide(double a, double b, double *out, char *err, size_t es) {
+    if (fabs(b) < 1e-15) {  // More precise zero check
+        snprintf(err, es, "Division by zero");
+        return false;
+    }
+    *out = a / b;
+    return true;
+}
+
+/**
+ * Safe power function - handles edge cases
+ * - 0^negative = undefined (division by zero)
+ * - negative^non-integer = complex number (not supported)
+ */
+static bool safe_power(double base, double exponent, double *out, char *err,
+                       size_t es) {
+    // Check for 0^negative
+    if (fabs(base) < 1e-15 && exponent < 0) {
+        snprintf(err, es, "Cannot raise zero to negative power");
+        return false;
+    }
+
+    // Check for negative base with non-integer exponent
+    if (base < 0 && fabs(exponent - round(exponent)) > 1e-12) {
+        snprintf(err, es, "Cannot raise negative number to non-integer power");
+        return false;
+    }
+
+    *out = pow(base, exponent);
+    return true;
+}
+
+/**
+ * Safe square root - checks for negative input
+ */
+static bool safe_sqrt(double x, double *out, char *err, size_t es) {
+    if (x < -1e-15) {  // Allow tiny negative due to floating point errors
+        snprintf(err, es, "Cannot take square root of negative number");
+        return false;
+    }
+    *out = sqrt(fabs(x));  // Use abs to handle tiny negatives
+    return true;
+}
+
+/**
+ * Safe base-10 logarithm - checks domain (x > 0)
+ */
+static bool safe_log10(double x, double *out, char *err, size_t es) {
+    if (x <= 1e-15) {
+        snprintf(err, es, "Logarithm undefined for zero or negative numbers");
+        return false;
+    }
+    *out = log10(x);
+    return true;
+}
+
+/**
+ * Safe natural logarithm - checks domain (x > 0)
+ */
+static bool safe_ln(double x, double *out, char *err, size_t es) {
+    if (x <= 1e-15) {
+        snprintf(err, es, "Natural log undefined for zero or negative numbers");
+        return false;
+    }
+    *out = log(x);
+    return true;
+}
+
+/**
+ * Safe tangent function in degrees - checks for undefined values
+ * Tangent is undefined at odd multiples of 90° (π/2 radians)
+ */
+static bool safe_tan_degrees(double degrees, double *out, char *err,
+                             size_t es) {
+    // Check if input is close to odd multiple of 90°
+    double mod = fmod(fabs(degrees), 180.0);
+    if (fabs(mod - 90.0) < 1e-10) {
+        snprintf(err, es, "Tangent undefined at 90° and odd multiples");
+        return false;
+    }
+    *out = tan(deg2rad(degrees));
+    return true;
+}
+
+/**
+ * =======================================================================
+ *      EXPRESSION PARSER - TOKENIZER AND SHUNTING YARD ALGORITHM
  * =======================================================================
  */
 
@@ -491,10 +602,10 @@ static bool apply_operator(char op, NumberStack *numbers, char *error,
             result = left * right;
             break;
         case '/':
-            // success = safe_divide(left, right, &result, error, error_size);
+            success = safe_divide(left, right, &result, error, error_size);
             break;
         case '^':
-            // success = safe_power(left, right, &result, error, error_size);
+            success = safe_power(left, right, &result, error, error_size);
             break;
         default:
             snprintf(error, error_size, "Unknown operator: %c", op);
@@ -527,17 +638,17 @@ static bool apply_function(const char *function_name, NumberStack *numbers,
 
     // Apply the appropriate mathematical function
     if (strcmp(function_name, "sqrt") == 0) {
-        // success = safe_sqrt(operand, &result, error, error_size);
+        success = safe_sqrt(operand, &result, error, error_size);
     } else if (strcmp(function_name, "log") == 0) {
-        // success = safe_log10(operand, &result, error, error_size);
+        success = safe_log10(operand, &result, error, error_size);
     } else if (strcmp(function_name, "ln") == 0) {
-        // success = safe_ln(operand, &result, error, error_size);
+        success = safe_ln(operand, &result, error, error_size);
     } else if (strcmp(function_name, "sin") == 0) {
-        // result = sin(deg2rad(operand));  // Convert degrees to radians
+        result = sin(deg2rad(operand));  // Convert degrees to radians
     } else if (strcmp(function_name, "cos") == 0) {
-        // result = cos(deg2rad(operand));  // Convert degrees to radians
+        result = cos(deg2rad(operand));  // Convert degrees to radians
     } else if (strcmp(function_name, "tan") == 0) {
-        // success = safe_tan_degrees(operand, &result, error, error_size);
+        success = safe_tan_degrees(operand, &result, error, error_size);
     } else {
         snprintf(error, error_size, "Unknown function: %s", function_name);
         return false;
@@ -927,3 +1038,9 @@ int main(int argc, char **argv) {
 
     return exit_status;
 }
+
+/**
+ * ========================================================================
+ *                      END OF C GUI CALCULATOR
+ * ========================================================================
+ */
