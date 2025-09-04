@@ -771,7 +771,7 @@ static void on_button_clicked(GtkWidget *widget, gpointer user_data) {
             state->just_evaluated = true;  // Flag to clear on next number input
         } else {
             // Display error message
-            update_display(state, "Error");
+            update_display(state, state->last_error);
             state->just_evaluated = true;
         }
         return;
